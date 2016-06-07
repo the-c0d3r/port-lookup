@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv
 
 """
@@ -38,10 +39,18 @@ class lookup:
         while True:
             port = input("Enter port number : ")
             if port != "":
-                result = self.query(int(port))
-                if len(result) > 0:
-                    print("{} Records found".format(len(result)))
-                    self.print_result(result)
+                try:
+                    result = self.query(int(port))
+                except ValueError:
+                    print("[-] Input is not number!")
+                else:
+                    if len(result) > 0:
+                        print("\n")
+                        print("{} Records found".format(len(result)))
+                        self.print_result(result)
+                        print("\n")
+                    else:
+                        print("\nNo result found for {}\n".format(port))
             else:
                 break
 
@@ -54,7 +63,7 @@ class lookup:
         for row in self.database:
             # Check if row.portrange is list
             if isinstance(row.portrange, list):
-                if port in range(row.portrange[0], row.portrange[1]):
+                if port in row.portrange:
                     matched.append(row)
             else:
                 if port == row.portrange:
@@ -69,7 +78,8 @@ class lookup:
         """
         leftspace = max([len(d.name) for d in data])
         for row in data:
-            print("| {:{}} | {}".format(row.name, leftspace, row.description))
+            print("| {:{}} | ({:^{}}) | {}".format(row.name, 7 if leftspace == 0 else leftspace, row.proto, 7, row.description))
+
 
 class Record:
     """ A record object to handle each row of record """
@@ -77,16 +87,15 @@ class Record:
         """ :param row: A 'list' of row """
         # 22,22,"tcp/udp","ssh","SSH Remote Login Protocol","i"
         self.name = "" if row[3] == "#" else row[3]
-        self.portrange = int(row[0]) if row[0] == row[1] else [int(row[0]), int(row[1])]
+        self.proto = row[2]
+        self.portrange = int(row[0]) if row[0] == row[1] else [port for port in range(int(row[0]), int(row[1])+1)]
+        # 2 possibilities for portrange, 1. just a single int, 2. a range of int in list format
         self.description = row[4]
         self.type = row[5]
 
     def __str__(self):
-        return "{} : {} | {}".format(self.name, self.portrange, self.description)
+        return "{} ({}) : {} | {}".format(self.name, self.proto, self.portrange, self.description)
 
-    def check(self, query):
-        """ Returns the port information if it matches, else nothing """
-        return self.desc if query == self.port else ""
 
 if __name__ == "__main__":
     print("Port lookup tool")
