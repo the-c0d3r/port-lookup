@@ -14,10 +14,16 @@ TODO
 """
 
 class lookup:
+    """ A control class for lookuping query """
+    def __init__(self):
+        """ init the default class variables """
+        self.csvfile = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "port.csv"
+        self.database = []
+
     def sort(self, data):
         """
-        To sort so that the data with 'i' tag comes first
-        'i' refers to the status of the item
+        To sort the values so that the row with official "i" status
+        comes before the unofficial "o" ones
         :param data: a list of rows
         :output: sorted list
         """
@@ -25,11 +31,9 @@ class lookup:
 
     def run(self, query=None):
         """ The startup function to handle query """
-        csvfile = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "port.csv"
         data = [] # For raw data
-        self.database = [] # A list of record objects
 
-        with open(csvfile) as db:
+        with open(self.csvfile) as db:
             for row in csv.reader(db):
                 data.append(row)
 
@@ -40,7 +44,7 @@ class lookup:
         if query == None:
             query = input("Enter (port number) or (service) : ")
 
-        if query.isdigit(): 
+        if query.isdigit():
             result = self.query_port(int(query))
             # Means the query is port
             if len(result) > 0:
@@ -49,7 +53,7 @@ class lookup:
                 self.print_result(result)
                 print("\n")
             else:
-                print("\nNo result found for {}\n".format(query))
+                print("\nNo result found for [{}]\n".format(query))
         else:
             # Means the query is service
             result = self.query_service(query)
@@ -59,7 +63,7 @@ class lookup:
                 self.print_result(result)
                 print("\n")
             else:
-                print("\nNo result found for {}\n".format(query))
+                print("\nNo result found for [{}]\n".format(query))
 
     def query_service(self, query):
         """
@@ -68,7 +72,7 @@ class lookup:
         """
         matched = []
         for row in self.database:
-            if query in row.name or query in row.description:
+            if query.lower() in row.name.lower() or query.lower() in row.description.lower():
                 matched.append(row)
         return self.sort(matched)
 
@@ -95,15 +99,32 @@ class lookup:
         :param data: A list of record objects that matches the query
         """
         leftspace = max([len(d.name) for d in data])
-        for row in data:
-            print("| {:{}} | ({:^{}}) | {}".format(row.name, 7 if leftspace == 0 else leftspace, row.proto, 7, row.description))
+        portspace = 0
+        # Ugly hack to find the max lenght for port field
+        # Change it if possible
+        for r in data:
+            if isinstance(r.portrange, list):
+                tmp = len(str(r.portrange[0])) + len(str(r.portrange[-1])) + 1
+                if tmp > portspace:
+                    portspace = tmp
+            else:
+                if len(str(r.portrange)) > portspace:
+                    portspace = len(str(r.portrange))
 
+        for row in data:
+            if isinstance(row.portrange, list):
+                ports = str(row.portrange[0]) + "-" + str(row.portrange[-1])
+            else:
+                ports = row.portrange
+            print("| {:{}} | {:<{}} | ({:^{}}) | {}".format(row.name if row.name else "",
+                  7 if leftspace == 0 else leftspace, ports, portspace, row.proto,
+                  7, row.description))
 
 class Record:
     """ A record object to handle each row of record """
     def __init__(self, row):
         """ :param row: A 'list' of row """
-        self.name = "" if row[3] == "#" else row[3]
+        self.name = row[3] #"" if row[3] == "#" else row[3]
         self.proto = row[2]
         self.portrange = int(row[0]) if row[0] == row[1] else [port for port in range(int(row[0]), int(row[1])+1)]
         # 2 possibilities for portrange, 1. just a single int, 2. a range of int in list format
