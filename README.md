@@ -3,6 +3,14 @@ A small tool to lookup the services associated with the TCP/UDP port numbers
 
 port.csv file from [www.bekkoame.ne.jp](http://www.bekkoame.ne.jp/~s_ita/port/port.csv)
 
+# Features
+
+- type in "ssh" to find the ports related to the query "ssh"
+- Or type in "22" to find the services related to "22"
+
+It can be executed by itself, or run it followed by the query
+`python3 port.py ssh` or `python3 port.py` and enter the query in prompt.
+
 
 # TODO
 
