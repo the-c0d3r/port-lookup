@@ -6,7 +6,7 @@
 3,3,tcp/udp,compressnet,Compression Process,i
 3,3,tcp/udp,compressnet,Midnight Commander Sometimes this program is assigned to this port,o
 4,4,tcp,#,Midnight Commander Sometimes this program is assigned to this prot,o
-4,4,tcp,#,Self-Certifying File System(SFS) sfssd acceps connections on TCP port 4 and passes them to the appropriate SFS daemon. SFS is a secure, global file system with completely decentralized control. SFS uses NFS 3 as the underlying protocol for file access.,o
+4,4,tcp,#,Self-Certifying File System(SFS) sfssd acceps connections on TCP port 4 and passes them to the appropriate SFS daemon. SFS is a secure global file system with completely decentralized control. SFS uses NFS 3 as the underlying protocol for file access.,o
 4,4,tcp/udp,#,Unassigned,i
 5,5,tcp/udp,rje,Remote Job Entry,i
 6,6,tcp/udp,#,Unassigned,i
