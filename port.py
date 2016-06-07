@@ -23,7 +23,7 @@ class lookup:
         """
         return sorted(data, key=lambda t: ord(t.type[0]))
 
-    def run(self, port=None):
+    def run(self, query=None):
         """ The startup function to handle query """
         csvfile = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "port.csv"
         data = [] # For raw data
@@ -37,23 +37,42 @@ class lookup:
         for row in data:
             self.database.append(Record(row))
 
-        if port == None:
-            port = input("Enter port number : ")
-        if port != "":
-            try:
-                result = self.query(int(port))
-            except ValueError:
-                print("[-] Input is not number!")
-            else:
-                if len(result) > 0:
-                    print("\n")
-                    print("{} Records found".format(len(result)))
-                    self.print_result(result)
-                    print("\n")
-                else:
-                    print("\nNo result found for {}\n".format(port))
+        if query == None:
+            query = input("Enter (port number) or (service) : ")
 
-    def query(self, port):
+        if query.isdigit(): 
+            result = self.query_port(int(query))
+            # Means the query is port
+            if len(result) > 0:
+                print("\n")
+                print("{} Records found".format(len(result)))
+                self.print_result(result)
+                print("\n")
+            else:
+                print("\nNo result found for {}\n".format(query))
+        else:
+            # Means the query is service
+            result = self.query_service(query)
+            if len(result) > 0:
+                print("\n")
+                print("{} Records matched [{}]".format(len(result),query))
+                self.print_result(result)
+                print("\n")
+            else:
+                print("\nNo result found for {}\n".format(query))
+
+    def query_service(self, query):
+        """
+        For searching the service in record.name, and/or record.description
+        :param query: a string to search for
+        """
+        matched = []
+        for row in self.database:
+            if query in row.name or query in row.description:
+                matched.append(row)
+        return self.sort(matched)
+
+    def query_port(self, port):
         """
         Responsible for querying the database
         :param port: An integer representing the port number to query
@@ -101,4 +120,4 @@ if __name__ == "__main__":
         print("Port lookup tool")
         lookup().run()
     else:
-        lookup().run(int(sys.argv[1]))
+        lookup().run(sys.argv[1])
