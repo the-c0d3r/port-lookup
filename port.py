@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv
+import csv, os
 
 """
 Can do 2 approaches
@@ -23,12 +23,13 @@ class lookup:
         """
         return sorted(data, key=lambda t: ord(t.type[0]))
 
-    def run(self):
+    def run(self, port=None):
         """ The startup function to handle query """
-        data     = [] # For raw data
+        csvfile = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "port.csv"
+        data = [] # For raw data
         self.database = [] # A list of record objects
 
-        with open("port.csv") as db:
+        with open(csvfile) as db:
             for row in csv.reader(db):
                 data.append(row)
 
@@ -36,23 +37,21 @@ class lookup:
         for row in data:
             self.database.append(Record(row))
 
-        while True:
+        if port == None:
             port = input("Enter port number : ")
-            if port != "":
-                try:
-                    result = self.query(int(port))
-                except ValueError:
-                    print("[-] Input is not number!")
-                else:
-                    if len(result) > 0:
-                        print("\n")
-                        print("{} Records found".format(len(result)))
-                        self.print_result(result)
-                        print("\n")
-                    else:
-                        print("\nNo result found for {}\n".format(port))
+        if port != "":
+            try:
+                result = self.query(int(port))
+            except ValueError:
+                print("[-] Input is not number!")
             else:
-                break
+                if len(result) > 0:
+                    print("\n")
+                    print("{} Records found".format(len(result)))
+                    self.print_result(result)
+                    print("\n")
+                else:
+                    print("\nNo result found for {}\n".format(port))
 
     def query(self, port):
         """
@@ -85,7 +84,6 @@ class Record:
     """ A record object to handle each row of record """
     def __init__(self, row):
         """ :param row: A 'list' of row """
-        # 22,22,"tcp/udp","ssh","SSH Remote Login Protocol","i"
         self.name = "" if row[3] == "#" else row[3]
         self.proto = row[2]
         self.portrange = int(row[0]) if row[0] == row[1] else [port for port in range(int(row[0]), int(row[1])+1)]
@@ -98,5 +96,9 @@ class Record:
 
 
 if __name__ == "__main__":
-    print("Port lookup tool")
-    lookup().run()
+    import sys
+    if len(sys.argv) == 1: 
+        print("Port lookup tool")
+        lookup().run()
+    else:
+        lookup().run(int(sys.argv[1]))
