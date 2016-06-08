@@ -2,7 +2,7 @@ import os
 
 
 def install():
-    file_path = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "port.py"
+    file_path = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "portinfo.py"
     install_path = "/usr/local/bin/portinfo"
     cmd = "sudo ln -s {} {}".format(file_path, install_path)
     cmd2 = "sudo chmod 775 {}".format(install_path)
