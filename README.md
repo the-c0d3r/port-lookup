@@ -39,5 +39,5 @@ sudo rm /usr/local/bin/portinfo
 - [ ] Write unittest code
 - [ ] Maybe remove the class structure for records again. Since it's only running once, no need to create objects for all rows. It was designed that way at first because it run continuously until user chooses to quit.
 - [ ] Make a sort so that the port number come up asending
-- [ ] Write `Makefile` so user can just execute `sudo make install` to symlink it to system-wide path `/usr/local/bin/portinfo` or a `setup.py` file
+- [x] ~~Write `Makefile` so user can just execute `sudo make install` to symlink it to system-wide path `/usr/local/bin/portinfo` or a `setup.py` file~~ Better yet, wrote a `setup.py` file for installation.
 - [ ] Use regex to do a fuzzy search rather than using "in" operator?
