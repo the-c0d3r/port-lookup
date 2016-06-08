@@ -15,6 +15,9 @@ It can be executed by itself, or run it followed by the query
 
 # TODO
 
-- [ ] Maybe remove the class structure for records again. Since it's only running once, no need to create objects for all rows. It was designed that way at first because I want it to run continuously until user chooses to quit.
+- [x] Print official port information first
+- [x] Print in a table format nicely
+- [ ] Write unittest code
+- [ ] Maybe remove the class structure for records again. Since it's only running once, no need to create objects for all rows. It was designed that way at first because it run continuously until user chooses to quit.
 - [ ] Make a sort so that the port number come up asending
-- [ ] Make it portable so it can be run system wide
+- [ ] Write `Makefile` so user can just execute `sudo make install` to symlink it to system-wide path `/usr/local/bin/portinfo`

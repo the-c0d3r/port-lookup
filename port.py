@@ -1,17 +1,7 @@
 #!/usr/bin/env python3
-import csv, os
+import csv
+import os
 
-"""
-Can do 2 approaches
-1. Only search for the port within the csv, no objects, fast for the first time,
-   slower for consequent search
-2. Create each object for each row, memory intensive, but faster after consequent search
-
-TODO
-1. Write Unittest code
-2. Print the official port services first
-3. Print it in a table format nicely
-"""
 
 class lookup:
     """ A control class for lookuping query """
