@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import os
+import sys
 
 
 class lookup:
@@ -21,15 +22,11 @@ class lookup:
 
     def run(self, query=None):
         """ The startup function to handle query """
-        data = [] # For raw data
 
         with open(self.csvfile) as db:
             for row in csv.reader(db):
-                data.append(row)
-
-        # Create record objects
-        for row in data:
-            self.database.append(Record(row))
+                # create Record Object
+                self.database.append(Record(row))
 
         if query == None:
             query = input("Enter (port number) or (service) : ")
@@ -106,9 +103,11 @@ class lookup:
                 ports = str(row.portrange[0]) + "-" + str(row.portrange[-1])
             else:
                 ports = row.portrange
-            print("| {:{}} | {:<{}} | ({:^{}}) | {}".format(row.name if row.name else "",
-                  7 if leftspace == 0 else leftspace, ports, portspace, row.proto,
-                  7, row.description))
+            print("| {:{}} | {:<{}} | ({:^{}}) | {}".format(
+                row.name if row.name else "",
+                7 if leftspace == 0 else leftspace,
+                ports, portspace, row.proto, 7, row.description
+            ))
 
 class Record:
     """ A record object to handle each row of record """
@@ -126,9 +125,13 @@ class Record:
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) == 1: 
+    if len(sys.argv) == 1:
         print("Port lookup tool")
         lookup().run()
     else:
-        lookup().run(sys.argv[1])
+        if len(sys.argv) > 2:
+            query = " ".join([i for i in sys.argv if sys.argv.index(i) >= 1])
+            print(query)
+        else:
+            query = sys.argv[1]
+        lookup().run(query)
