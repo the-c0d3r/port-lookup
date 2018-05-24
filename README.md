@@ -13,7 +13,7 @@ port.csv file from [www.bekkoame.ne.jp](http://www.bekkoame.ne.jp/~s_ita/port/po
 - Or type in "22" to find the services related to "22"
 
 It can be executed by itself, or run it followed by the query
-`python3 port.py ssh` or `python3 port.py` and enter the query in prompt.
+`python3 portinfo.py ssh` or `python3 portinfo.py` and enter the query in prompt.
 
 # Installation
 
